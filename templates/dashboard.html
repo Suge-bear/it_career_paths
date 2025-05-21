@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head><title>Dashboard</title></head>
+<body>
+  <h1>Welcome, {{ user.email }}!</h1>
+  <h2>Explore IT Career Paths:</h2>
+  <ul>
+    {% for path in career_paths %}
+      <li><a href="/career/{{ path.id }}">{{ path.name }}</a></li>
+    {% endfor %}
+  </ul>
+  <a href="/logout">Log Out</a>
+</body>
+</html>
