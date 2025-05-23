@@ -39,12 +39,16 @@ def login():
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
+        print("✅ Form validated!")
         username = form.username.data
         password = generate_password_hash(form.password.data)
         new_user = User(username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
+    else:
+        print("❌ Form did NOT validate.")
+        print("Form errors:", form.errors)
     return render_template('signup.html', form=form)
 
 
