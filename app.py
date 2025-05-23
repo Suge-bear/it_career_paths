@@ -2,9 +2,18 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
+
+class SignUpForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Create Account')
+
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key'
+app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 db = SQLAlchemy(app)
 
@@ -28,14 +37,16 @@ def login():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = generate_password_hash(request.form['password'])
+    form = SignUpForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = generate_password_hash(form.password.data)
         new_user = User(username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
-    return render_template('signup.html')
+    return render_template('signup.html', form=form)
+
 
 @app.route('/dashboard')
 def dashboard():

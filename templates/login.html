@@ -4,12 +4,13 @@
 <body>
   <h1>Login</h1>
   <form method="POST">
-    <label>Email:</label><br>
-    <input type="email" name="email"><br><br>
-    <label>Password:</label><br>
-    <input type="password" name="password"><br><br>
-    <input type="submit" value="Login">
-  </form>
+  {{ form.csrf_token }}
+  <label>Username:</label><br>
+  <input type="text" name="username"><br><br>
+  <label>Password:</label><br>
+  <input type="password" name="password"><br><br>
+  <input type="submit" value="Create Account">
+</form>
   <p>Don’t have an account? <a href="/signup">Sign up</a></p>
 </body>
 </html>
