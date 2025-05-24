@@ -10,6 +10,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 from extensions import db  # ✅ From new extensions file
 from flask_login import login_required
+from forms import SignupForm
 
 
 class SignUpForm(FlaskForm):
