@@ -1,4 +1,5 @@
 # app.py
+from flask import flash
 from flask import Flask, render_template, redirect, url_for, request, session
 from flask import render_template
 from forms import LoginForm  # import your form
@@ -28,8 +29,15 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
-
+    form = LoginForm()
+    if form.validate_on_submit():
+        # Simulate login success or fail
+        if form.username.data == 'admin' and form.password.data == 'pass':
+            flash('Login successful!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid credentials. Try again.', 'danger')
+    return render_template('login.html', form=form)
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignUpForm()
