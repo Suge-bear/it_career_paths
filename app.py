@@ -9,6 +9,8 @@ from flask_wtf.csrf import CSRFProtect
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 from extensions import db  # ✅ From new extensions file
+from flask_login import login_required
+
 
 class SignUpForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
