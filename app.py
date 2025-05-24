@@ -1,7 +1,10 @@
 # app.py
 from flask import Flask, render_template, redirect, url_for, request, session
+from flask import render_template
+from forms import LoginForm  # import your form
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 from extensions import db  # ✅ From new extensions file
@@ -25,14 +28,6 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
-            session['user_id'] = user.id
-            return redirect(url_for('dashboard'))
-        return 'Invalid credentials'
     return render_template('login.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
