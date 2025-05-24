@@ -40,16 +40,19 @@ def login():
     return render_template('login.html', form=form)
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = SignUpForm()
+    form = SignupForm()
     if form.validate_on_submit():
-        username = form.username.data
-        password = generate_password_hash(form.password.data)
-        new_user = User(username=username, password=password)
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('Email already registered.')
+            return redirect(url_for('signup'))
+        hashed_password = generate_password_hash(form.password.data)
+        new_user = User(email=form.email.data, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login'))
+        login_user(new_user)
+        return redirect(url_for('dashboard'))
     return render_template('signup.html', form=form)
-
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
@@ -61,6 +64,12 @@ def dashboard():
 def career_detail(path_id):
     path = CareerPath.query.get_or_404(path_id)
     return render_template('career_path.html', path=path)
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
 
 if __name__ == '__main__':
     with app.app_context():
